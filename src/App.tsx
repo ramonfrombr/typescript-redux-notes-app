@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import NewNoteInput from "./NewNoteInput";
+import { NotesStateProps } from "./notesReducer";
+import { addNote, removeNote } from "./actions";
+import NoteItem from "./NoteItem";
 
 function App() {
+  const notes = useSelector<NotesStateProps, NotesStateProps["notes"]>(
+    (state) => state.notes
+  );
+  const dispatch = useDispatch();
+
+  const onAddNote = (note: string) => {
+    dispatch(addNote(note));
+  };
+
+  const onRemoveNote = (note: string) => {
+    dispatch(removeNote(note));
+  };
+
+  console.log(notes);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NewNoteInput addNote={onAddNote} />
+      <hr />
+      <ul>
+        {notes.map((note, index) => (
+          <NoteItem key={index} note={note} onRemoveNote={onRemoveNote} />
+        ))}
+      </ul>
+    </>
   );
 }
 
